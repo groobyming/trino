@@ -10,7 +10,7 @@
 
     <groupId>io.prestosql</groupId>
     <artifactId>presto-root</artifactId>
-    <version>339-bk-1.1.1</version>
+    <version>339-bk-1.1.2</version>
     <packaging>pom</packaging>
 
     <name>presto-root</name>
@@ -57,7 +57,9 @@
         <dep.gcs.version>2.0.0</dep.gcs.version>
         <dep.errorprone.version>2.4.0</dep.errorprone.version>
         <dep.joda.version>2.10.6</dep.joda.version>
-
+        <dep.jackson-databind.version>2.11.4</dep.jackson-databind.version>
+        <dep.jackson-annotations.version>2.11.4</dep.jackson-annotations.version>
+        <dep.checker-qual.version>3.4.0</dep.checker-qual.version>
         <!--
           America/Bahia_Banderas has:
            - offset change since 1970 (offset Jan 1970: -08:00, offset Jan 2018: -06:00)
@@ -150,6 +152,24 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${dep.jackson-databind.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${dep.jackson-annotations.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>${dep.checker-qual.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>io.prestosql</groupId>
                 <artifactId>presto-spi</artifactId>

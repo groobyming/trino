@@ -393,7 +393,7 @@ public class IcebergMetadata
             propertiesBuilder.put(TABLE_COMMENT, tableMetadata.getComment().get());
         }
 
-        TableMetadata metadata = newTableMetadata(operations, schema, partitionSpec, targetPath, propertiesBuilder.build());
+        TableMetadata metadata = newTableMetadata(schema, partitionSpec, targetPath, propertiesBuilder.build());
 
         transaction = createTableTransaction(tableName, operations, metadata);
 

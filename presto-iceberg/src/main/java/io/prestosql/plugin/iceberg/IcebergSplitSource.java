@@ -15,6 +15,7 @@ package io.prestosql.plugin.iceberg;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
+import io.prestosql.spi.PrestoException;
 import io.prestosql.spi.connector.ConnectorPartitionHandle;
 import io.prestosql.spi.connector.ConnectorSplit;
 import io.prestosql.spi.connector.ConnectorSplitSource;
@@ -40,6 +41,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.google.common.collect.Iterators.limit;
 import static io.prestosql.plugin.iceberg.IcebergUtil.getIdentityPartitions;
+import static io.prestosql.spi.StandardErrorCode.NOT_SUPPORTED;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.CompletableFuture.completedFuture;
@@ -70,6 +72,9 @@ public class IcebergSplitSource
         Iterator<FileScanTask> iterator = limit(fileScanIterator, maxSize);
         while (iterator.hasNext()) {
             FileScanTask task = iterator.next();
+            if (!task.deletes().isEmpty()) {
+                throw new PrestoException(NOT_SUPPORTED, "Iceberg tables with delete files are not supported");
+            }
             splits.add(toIcebergSplit(task));
         }
         return completedFuture(new ConnectorSplitBatch(splits, isFinished()));
