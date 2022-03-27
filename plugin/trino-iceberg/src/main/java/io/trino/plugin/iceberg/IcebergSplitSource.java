@@ -15,12 +15,13 @@ package io.trino.plugin.iceberg;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
-import io.trino.spi.TrinoException;
+import io.airlift.log.Logger;
 import io.trino.spi.connector.ConnectorPartitionHandle;
 import io.trino.spi.connector.ConnectorSplit;
 import io.trino.spi.connector.ConnectorSplitSource;
 import io.trino.spi.connector.SchemaTableName;
 import org.apache.iceberg.CombinedScanTask;
+import org.apache.iceberg.DeleteFile;
 import org.apache.iceberg.FileScanTask;
 import org.apache.iceberg.io.CloseableIterable;
 
@@ -34,13 +35,14 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.google.common.collect.Iterators.limit;
 import static io.trino.plugin.iceberg.IcebergUtil.getPartitionKeys;
-import static io.trino.spi.StandardErrorCode.NOT_SUPPORTED;
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.CompletableFuture.completedFuture;
+import static org.apache.iceberg.util.SerializationUtil.serializeToBytes;
 
 public class IcebergSplitSource
         implements ConnectorSplitSource
 {
+    private static final Logger log = Logger.get(IcebergSplitSource.class);
     private final SchemaTableName schemaTableName;
     private final CloseableIterable<CombinedScanTask> combinedScanIterable;
     private final Iterator<FileScanTask> fileScanIterator;
@@ -65,7 +67,10 @@ public class IcebergSplitSource
         while (iterator.hasNext()) {
             FileScanTask task = iterator.next();
             if (!task.deletes().isEmpty()) {
-                throw new TrinoException(NOT_SUPPORTED, "Iceberg tables with delete files are not supported: " + schemaTableName);
+                for (DeleteFile df : task.deletes()) {
+                    log.info("xxx delete file:%s", df.path());
+                }
+                //throw new TrinoException(NOT_SUPPORTED, "Iceberg tables with delete files are not supported: " + schemaTableName);
             }
             splits.add(toIcebergSplit(task));
         }
@@ -92,11 +97,7 @@ public class IcebergSplitSource
     private ConnectorSplit toIcebergSplit(FileScanTask task)
     {
         return new IcebergSplit(
-                task.file().path().toString(),
-                task.start(),
-                task.length(),
-                task.file().fileSizeInBytes(),
-                task.file().format(),
+                serializeToBytes(task),
                 ImmutableList.of(),
                 getPartitionKeys(task));
     }
