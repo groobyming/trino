@@ -15,6 +15,7 @@ package io.trino.plugin.hive.parquet;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
+import io.airlift.log.Logger;
 import io.trino.parquet.Field;
 import io.trino.parquet.ParquetCorruptionException;
 import io.trino.parquet.reader.ParquetReader;
@@ -45,6 +46,7 @@ import static java.util.Objects.requireNonNull;
 public class ParquetPageSource
         implements ConnectorPageSource
 {
+    private static final Logger log = Logger.get(ParquetPageSource.class);
     private final ParquetReader parquetReader;
     private final List<Type> types;
     private final List<Optional<Field>> fields;
@@ -143,6 +145,7 @@ public class ParquetPageSource
             completedPositions += batchSize;
 
             Block[] blocks = new Block[fields.size()];
+            log.info("fields:%s, blocks.length:%s", fields, blocks.length);
             for (int column = 0; column < blocks.length; column++) {
                 if (isIndexColumn(column)) {
                     blocks[column] = getRowIndexColumn(parquetReader.lastBatchStartRow(), batchSize);

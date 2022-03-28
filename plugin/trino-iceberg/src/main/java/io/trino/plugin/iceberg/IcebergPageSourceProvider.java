@@ -16,6 +16,7 @@ package io.trino.plugin.iceberg;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import io.airlift.log.Logger;
 import io.trino.memory.context.AggregatedMemoryContext;
 import io.trino.orc.NameBasedFieldMapper;
 import io.trino.orc.OrcColumn;
@@ -137,6 +138,7 @@ import static org.joda.time.DateTimeZone.UTC;
 public class IcebergPageSourceProvider
         implements ConnectorPageSourceProvider
 {
+    private static final Logger log = Logger.get(IcebergPageSourceProvider.class);
     private final HdfsEnvironment hdfsEnvironment;
     private final FileFormatDataSourceStats fileFormatDataSourceStats;
     private final OrcReaderOptions orcReaderOptions;
@@ -190,6 +192,7 @@ public class IcebergPageSourceProvider
                 .map(column -> table.getSchema().findField(column.getId()))
                 .collect(toImmutableList());
         Schema deleteReadSchema = new Schema(deleteReadFields);
+        log.info("xxx deleteReadFields:%s, deleteReadSchema:%s", deleteReadFields, deleteReadSchema);
         TrinoDeleteFilter deleteFilter = new TrinoDeleteFilter(fileIo, split.getTask(), deleteReadSchema, deleteReadSchema);
         getColumns(deleteFilter.requiredSchema(), typeManager).stream()
                 .filter(column -> !partitionKeys.containsKey(column.getId()))
