@@ -46,6 +46,10 @@ public class RedisConnectorModule
 
         binder.bind(RedisJedisManager.class).in(Scopes.SINGLETON);
 
+        binder.bind(RedisTableConfigDao.class).toProvider(RedisTableConfigDaoProvider.class)
+                .in(Scopes.SINGLETON);
+        binder.bind(RedisTableConfigManager.class).in(Scopes.SINGLETON);
+
         configBinder(binder).bindConfig(RedisConnectorConfig.class);
 
         jsonBinder(binder).addDeserializerBinding(Type.class).to(TypeDeserializer.class);

@@ -33,6 +33,7 @@ import java.util.function.Supplier;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.readAllBytes;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -43,19 +44,33 @@ public class RedisTableDescriptionSupplier
     private static final Logger log = Logger.get(RedisTableDescriptionSupplier.class);
 
     private final RedisConnectorConfig redisConnectorConfig;
+    private final RedisTableConfigManager redisTableConfigManager;
     private final JsonCodec<RedisTableDescription> tableDescriptionCodec;
+    private final boolean useConfigDb;
 
     @Inject
-    RedisTableDescriptionSupplier(RedisConnectorConfig redisConnectorConfig, JsonCodec<RedisTableDescription> tableDescriptionCodec)
+    RedisTableDescriptionSupplier(RedisConnectorConfig redisConnectorConfig, RedisTableConfigManager redisTableConfigManager, JsonCodec<RedisTableDescription> tableDescriptionCodec)
     {
         this.redisConnectorConfig = requireNonNull(redisConnectorConfig, "redisConnectorConfig is null");
+        this.redisTableConfigManager = requireNonNull(redisTableConfigManager, "redisTableConfigManager is null");
         this.tableDescriptionCodec = requireNonNull(tableDescriptionCodec, "tableDescriptionCodec is null");
+        this.useConfigDb = redisConnectorConfig.isUseConfigDb();
     }
 
     @Override
     public Map<SchemaTableName, RedisTableDescription> get()
     {
         ImmutableMap.Builder<SchemaTableName, RedisTableDescription> builder = ImmutableMap.builder();
+
+        if (useConfigDb) {
+            List<String> tablesConfigList = redisTableConfigManager.getTablesConfig(redisConnectorConfig.getClusterName());
+            for (String tableConfig : tablesConfigList) {
+                RedisTableDescription table = tableDescriptionCodec.fromJson(tableConfig.getBytes(UTF_8));
+                String schemaName = table.getSchemaName();
+                builder.put(new SchemaTableName(schemaName, table.getTableName()), table);
+            }
+            return builder.build();
+        }
 
         try {
             for (File file : listFiles(redisConnectorConfig.getTableDescriptionDir())) {
