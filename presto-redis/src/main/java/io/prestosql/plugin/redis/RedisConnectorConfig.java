@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.stream.StreamSupport;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class RedisConnectorConfig
 {
@@ -86,6 +87,11 @@ public class RedisConnectorConfig
     private File tableDescriptionDir = new File("etc/redis/");
 
     /**
+     * The cache time for redis table description files.
+     */
+    private Duration tableDescriptionCacheDuration = new Duration(5, MINUTES);
+
+    /**
      * Whether internal columns are shown in table metadata or not. Default is no.
      */
     private boolean hideInternalColumns = true;
@@ -105,6 +111,20 @@ public class RedisConnectorConfig
     public RedisConnectorConfig setTableDescriptionDir(File tableDescriptionDir)
     {
         this.tableDescriptionDir = tableDescriptionDir;
+        return this;
+    }
+
+    @NotNull
+    @MinDuration("1s")
+    public Duration getTableDescriptionCacheDuration()
+    {
+        return tableDescriptionCacheDuration;
+    }
+
+    @Config("redis.table-description-cache-ttl")
+    public RedisConnectorConfig setTableDescriptionCacheDuration(Duration tableDescriptionCacheDuration)
+    {
+        this.tableDescriptionCacheDuration = tableDescriptionCacheDuration;
         return this;
     }
 
