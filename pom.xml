@@ -57,8 +57,9 @@
         <dep.gcs.version>2.0.0</dep.gcs.version>
         <dep.errorprone.version>2.4.0</dep.errorprone.version>
         <dep.joda.version>2.10.6</dep.joda.version>
-        <dep.jackson-databind.version>2.11.4</dep.jackson-databind.version>
-        <dep.jackson-annotations.version>2.11.4</dep.jackson-annotations.version>
+        <dep.jackson-databind.version>2.13.3</dep.jackson-databind.version>
+        <dep.jackson-annotations.version>2.13.3</dep.jackson-annotations.version>
+        <dep.jackson-core.version>2.13.3</dep.jackson-core.version>
         <dep.checker-qual.version>3.4.0</dep.checker-qual.version>
         <!--
           America/Bahia_Banderas has:
@@ -161,6 +162,12 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
+                <version>${dep.jackson-annotations.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
                 <version>${dep.jackson-annotations.version}</version>
             </dependency>
 
