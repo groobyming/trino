@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.prestosql</groupId>
         <artifactId>presto-root</artifactId>
-        <version>339-bk-1.1.2</version>
+        <version>339-bk-1.1.3</version>
     </parent>
 
     <artifactId>presto-hive-hadoop2</artifactId>
