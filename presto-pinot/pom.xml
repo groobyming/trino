@@ -4,7 +4,7 @@
     <parent>
         <artifactId>presto-root</artifactId>
         <groupId>io.prestosql</groupId>
-        <version>339-bk-1.1.2</version>
+        <version>339-bk-1.1.3</version>
     </parent>
 
     <artifactId>presto-pinot</artifactId>
