@@ -30,7 +30,7 @@
     <scm>
         <connection>scm:git:git://github.com/trinodb/trino.git</connection>
         <url>https://github.com/trinodb/trino</url>
-        <tag>382</tag>
+        <tag>382-bk-1.0.1</tag>
     </scm>
 
     <properties>
