@@ -49,6 +49,7 @@ import static io.trino.connector.system.KillQueryProcedure.createPreemptQueryExc
 import static io.trino.security.AccessControlUtil.checkCanKillQueryOwnedBy;
 import static io.trino.security.AccessControlUtil.checkCanViewQueryOwnedBy;
 import static io.trino.security.AccessControlUtil.filterQueries;
+import static io.trino.server.security.ResourceSecurity.AccessType.PUBLIC;
 import static io.trino.server.security.ResourceSecurity.AccessType.WEB_UI;
 import static java.util.Objects.requireNonNull;
 
@@ -91,6 +92,26 @@ public class UiQueryResource
     @GET
     @Path("{queryId}")
     public Response getQueryInfo(@PathParam("queryId") QueryId queryId, @Context HttpServletRequest servletRequest, @Context HttpHeaders httpHeaders)
+    {
+        requireNonNull(queryId, "queryId is null");
+
+        Optional<QueryInfo> queryInfo = dispatchManager.getFullQueryInfo(queryId);
+        if (queryInfo.isPresent()) {
+            try {
+                checkCanViewQueryOwnedBy(sessionContextFactory.extractAuthorizedIdentity(servletRequest, httpHeaders, alternateHeaderName), queryInfo.get().getSession().toIdentity(), accessControl);
+                return Response.ok(queryInfo.get()).build();
+            }
+            catch (AccessDeniedException e) {
+                throw new ForbiddenException();
+            }
+        }
+        return Response.status(Status.GONE).build();
+    }
+
+    @ResourceSecurity(PUBLIC)
+    @GET
+    @Path("/detail/{queryId}")
+    public Response getQueryDetail(@PathParam("queryId") QueryId queryId, @Context HttpServletRequest servletRequest, @Context HttpHeaders httpHeaders)
     {
         requireNonNull(queryId, "queryId is null");
 
