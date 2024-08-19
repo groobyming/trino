@@ -53,7 +53,7 @@ public class ClusterStatsResource
         this.clusterMemoryManager = requireNonNull(clusterMemoryManager, "clusterMemoryManager is null");
     }
 
-    @ResourceSecurity(WEB_UI)
+    @ResourceSecurity(PUBLIC)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ClusterStats getClusterStats()

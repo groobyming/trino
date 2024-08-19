@@ -27,6 +27,7 @@ import jakarta.ws.rs.Produces;
 import static io.airlift.units.Duration.nanosSince;
 import static io.trino.server.security.ResourceSecurity.AccessType.WEB_UI;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static io.trino.server.security.ResourceSecurity.AccessType.PUBLIC;
 import static java.util.Objects.requireNonNull;
 
 @Path("/ui/api/cluster")
@@ -43,7 +44,7 @@ public class ClusterResource
         this.environment = nodeInfo.getEnvironment();
     }
 
-    @ResourceSecurity(WEB_UI)
+    @ResourceSecurity(PUBLIC)
     @GET
     @Produces(APPLICATION_JSON)
     public ClusterInfo getInfo()

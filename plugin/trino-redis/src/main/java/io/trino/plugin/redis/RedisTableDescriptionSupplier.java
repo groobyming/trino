@@ -34,6 +34,7 @@ import java.util.function.Supplier;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.readAllBytes;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -47,21 +48,37 @@ public class RedisTableDescriptionSupplier
     private final Set<String> tableNames;
     private final String defaultSchema;
     private final JsonCodec<RedisTableDescription> tableDescriptionCodec;
+    private final boolean useConfigDb;
+    private final RedisTableConfigManager redisTableConfigManager;
+    private final RedisConnectorConfig redisConnectorConfig;
 
     @Inject
-    RedisTableDescriptionSupplier(RedisConnectorConfig redisConnectorConfig, JsonCodec<RedisTableDescription> tableDescriptionCodec)
+    RedisTableDescriptionSupplier(RedisConnectorConfig redisConnectorConfig, RedisTableConfigManager redisTableConfigManager, JsonCodec<RedisTableDescription> tableDescriptionCodec)
     {
         requireNonNull(redisConnectorConfig, "redisConnectorConfig is null");
         this.tableDescriptionDir = redisConnectorConfig.getTableDescriptionDir();
         this.tableNames = ImmutableSet.copyOf(redisConnectorConfig.getTableNames());
         this.defaultSchema = redisConnectorConfig.getDefaultSchema();
         this.tableDescriptionCodec = requireNonNull(tableDescriptionCodec, "tableDescriptionCodec is null");
+        this.useConfigDb = redisConnectorConfig.isUseConfigDb();
+        this.redisTableConfigManager = requireNonNull(redisTableConfigManager, "redisTableConfigManager is null");
+        this.redisConnectorConfig = requireNonNull(redisConnectorConfig, "redisConnectorConfig is null");
     }
 
     @Override
     public Map<SchemaTableName, RedisTableDescription> get()
     {
         ImmutableMap.Builder<SchemaTableName, RedisTableDescription> builder = ImmutableMap.builder();
+
+        if (useConfigDb) {
+            List<String> tablesConfigList = redisTableConfigManager.getTablesConfig(redisConnectorConfig.getClusterName());
+            for (String tableConfig : tablesConfigList) {
+                RedisTableDescription table = tableDescriptionCodec.fromJson(tableConfig.getBytes(UTF_8));
+                String schemaName = table.getSchemaName();
+                builder.put(new SchemaTableName(schemaName, table.getTableName()), table);
+            }
+            return builder.buildOrThrow();
+        }
 
         try {
             for (File file : listFiles(tableDescriptionDir)) {

@@ -214,6 +214,40 @@ public class ParquetPageSourceFactory
         MessageColumnIO messageColumn;
         ParquetDataSource dataSource = null;
         try {
+            // todo bloom filter in hive connector
+            // boolean bloomNotMatch = false;
+            // try {
+            //     Bloom bloom = null;
+            //     for (TupleDomain<HiveColumnHandle> effectivePredicate : disjunctTupleDomains) {
+            //         for (Entry<HiveColumnHandle, Domain> entry : effectivePredicate.getDomains().get().entrySet()) {
+            //             HiveColumnHandle columnHandle = entry.getKey();
+            //             if (!columnHandle.getHiveType().getCategory().equals(PRIMITIVE)) {
+            //                 continue;
+            //             }
+            //             Domain v = entry.getValue();
+            //             if (v.isSingleValue()) {
+            //                 String columnName = columnHandle.getBaseColumnName();
+            //                 if (bloom == null) {
+            //
+            //                     bloom = new Bloom(hdfsEnvironment, inputFile.location().path(), session.getIdentity(), configuration);
+            //                 }
+            //                 try {
+            //                     String target = ((Slice) v.getSingleValue()).toStringUtf8();
+            //                     bloomNotMatch = bloom.notMatches(columnName, target);
+            //                 }
+            //                 catch (Exception e) {
+            //                     continue;
+            //                 }
+            //
+            //                 if (bloomNotMatch) {
+            //                     return new ReaderPageSource(new EmptyPageSource(), Optional.empty());
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+            // catch (Exception e) {
+            // }
             AggregatedMemoryContext memoryContext = newSimpleAggregatedMemoryContext();
             dataSource = createDataSource(inputFile, estimatedFileSize, options, memoryContext, stats);
 

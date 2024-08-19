@@ -47,11 +47,16 @@ public class RedisConnectorConfig
     private String redisPassword;
     private Duration redisConnectTimeout = new Duration(2000, MILLISECONDS);
     private String defaultSchema = "default";
+    private String clusterName;
     private Set<String> tableNames = ImmutableSet.of();
     private File tableDescriptionDir = new File("etc/redis/");
     private Duration tableDescriptionCacheDuration = new Duration(5, MINUTES);
     private boolean hideInternalColumns = true;
     private boolean keyPrefixSchemaTable;
+    private boolean useConfigDb;
+    private String configDbUrl;
+    private String configDbUser;
+    private String configDbPassword;
 
     @NotNull
     public File getTableDescriptionDir()
@@ -93,6 +98,20 @@ public class RedisConnectorConfig
     public RedisConnectorConfig setTableNames(String tableNames)
     {
         this.tableNames = ImmutableSet.copyOf(Splitter.on(',').omitEmptyStrings().trimResults().split(tableNames));
+        return this;
+    }
+
+    @NotNull
+    public String getClusterName()
+    {
+        return clusterName;
+    }
+
+    @Config("redis.cluster-name")
+    @ConfigDescription("Set of cluster known to this connector")
+    public RedisConnectorConfig setClusterName(String clusterName)
+    {
+        this.clusterName = clusterName;
         return this;
     }
 
@@ -242,6 +261,58 @@ public class RedisConnectorConfig
     public RedisConnectorConfig setKeyPrefixSchemaTable(boolean keyPrefixSchemaTable)
     {
         this.keyPrefixSchemaTable = keyPrefixSchemaTable;
+        return this;
+    }
+
+    public boolean isUseConfigDb()
+    {
+        return useConfigDb;
+    }
+
+    @Config("redis.use-config-db")
+    @ConfigDescription("Whether to use configuration db")
+    public RedisConnectorConfig setUseConfigDb(boolean useConfigDb)
+    {
+        this.useConfigDb = useConfigDb;
+        return this;
+    }
+
+    public String getConfigDbUrl()
+    {
+        return configDbUrl;
+    }
+
+    @Config("redis.config-db-url")
+    @ConfigDescription("The configuration db url for Redis table")
+    public RedisConnectorConfig setConfigDbUrl(String configDbUrl)
+    {
+        this.configDbUrl = configDbUrl;
+        return this;
+    }
+
+    public String getConfigDbUser()
+    {
+        return configDbUser;
+    }
+
+    @Config("redis.config-db-user")
+    @ConfigDescription("The configuration db user for Redis table")
+    public RedisConnectorConfig setConfigDbUser(String configDbUser)
+    {
+        this.configDbUser = configDbUser;
+        return this;
+    }
+
+    public String getConfigDbPassword()
+    {
+        return configDbPassword;
+    }
+
+    @Config("redis.config-db-password")
+    @ConfigDescription("The configuration db password for Redis table")
+    public RedisConnectorConfig setConfigDbPassword(String configDbPassword)
+    {
+        this.configDbPassword = configDbPassword;
         return this;
     }
 

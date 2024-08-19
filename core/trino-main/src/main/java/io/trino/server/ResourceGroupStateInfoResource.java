@@ -32,6 +32,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static io.trino.server.security.ResourceSecurity.AccessType.MANAGEMENT_READ;
 import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
+import static io.trino.server.security.ResourceSecurity.AccessType.PUBLIC;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
@@ -46,7 +47,7 @@ public class ResourceGroupStateInfoResource
         this.resourceGroupManager = requireNonNull(resourceGroupManager, "resourceGroupManager is null");
     }
 
-    @ResourceSecurity(MANAGEMENT_READ)
+    @ResourceSecurity(PUBLIC)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Encoded
