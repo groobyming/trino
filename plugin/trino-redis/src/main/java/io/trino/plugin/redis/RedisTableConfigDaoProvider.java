@@ -13,13 +13,11 @@
  */
 package io.trino.plugin.redis;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.mysql.cj.jdbc.MysqlDataSource;
-import jakarta.inject.Inject;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
-
-
-import jakarta.inject.Provider;
 
 import static java.util.Objects.requireNonNull;
 

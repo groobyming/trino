@@ -25,9 +25,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 
 import static io.airlift.units.Duration.nanosSince;
-import static io.trino.server.security.ResourceSecurity.AccessType.WEB_UI;
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static io.trino.server.security.ResourceSecurity.AccessType.PUBLIC;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static java.util.Objects.requireNonNull;
 
 @Path("/ui/api/cluster")

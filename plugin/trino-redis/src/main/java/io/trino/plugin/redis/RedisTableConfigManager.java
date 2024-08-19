@@ -14,8 +14,7 @@
 package io.trino.plugin.redis;
 
 import com.google.common.collect.ImmutableList;
-
-import jakarta.inject.Inject;
+import com.google.inject.Inject;
 
 import java.util.List;
 

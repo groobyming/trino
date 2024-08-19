@@ -20,8 +20,8 @@ import com.google.common.hash.Funnels;
 // import org.apache.hadoop.fs.FileSystem;
 // import org.apache.hadoop.fs.Path;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
+// import java.io.IOException;
+// import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;

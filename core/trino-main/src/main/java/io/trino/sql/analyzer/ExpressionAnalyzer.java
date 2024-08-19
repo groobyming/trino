@@ -847,7 +847,9 @@ public class ExpressionAnalyzer
                 case LESS_THAN_OR_EQUAL, GREATER_THAN_OR_EQUAL -> OperatorType.LESS_THAN_OR_EQUAL;
                 case IS_DISTINCT_FROM -> OperatorType.IS_DISTINCT_FROM;
             };
-
+            Optional<String> convertedDataType = getConvertedDateType(node.getLeft(), node.getRight(), context);
+            Optional<Expression> convertedExpression = getConvertedExpression(node.getRight(), convertedDataType);
+            convertedExpression.ifPresent(exp -> node.setRight(exp));
             return getOperator(context, node, operatorType, node.getLeft(), node.getRight());
         }
 
@@ -2295,7 +2297,7 @@ public class ExpressionAnalyzer
                         });
             }
 
-            if (valueList instanceof InListExpression inListExpression) {
+            if (valueList instanceof InListExpression) {
                 InListExpression inListExpression = (InListExpression) valueList;
                 List<Expression> replacedValueList = new ArrayList<>();
                 for (Expression listValue : inListExpression.getValues()) {

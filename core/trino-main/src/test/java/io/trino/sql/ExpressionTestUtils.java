@@ -16,15 +16,9 @@ package io.trino.sql;
 import com.google.common.collect.ImmutableMap;
 import io.trino.Session;
 import io.trino.execution.warnings.WarningCollector;
-import io.trino.metadata.FunctionManager;
-import io.trino.metadata.GlobalFunctionCatalog;
-import io.trino.metadata.Metadata;
 import io.trino.metadata.ResolvedFunction;
 import io.trino.security.AllowAllAccessControl;
-import io.trino.spi.block.TestingBlockEncodingSerde;
-import io.trino.spi.type.TestingTypeManager;
 import io.trino.spi.type.Type;
-import io.trino.spi.type.TypeOperators;
 import io.trino.sql.analyzer.ExpressionAnalyzer;
 import io.trino.sql.analyzer.Scope;
 import io.trino.sql.parser.SqlParser;
@@ -50,7 +44,6 @@ import static io.trino.sql.analyzer.SemanticExceptions.semanticException;
 import static io.trino.sql.analyzer.TypeSignatureTranslator.toSqlType;
 import static io.trino.sql.planner.TypeAnalyzer.createTestingTypeAnalyzer;
 import static io.trino.testing.TransactionBuilder.transaction;
-import static java.util.Collections.emptyMap;
 
 public final class ExpressionTestUtils
 {

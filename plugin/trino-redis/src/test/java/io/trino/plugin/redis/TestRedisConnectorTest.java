@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableMap;
 import io.trino.plugin.redis.util.RedisServer;
 import io.trino.sql.planner.plan.FilterNode;
 import io.trino.testing.QueryRunner;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.trino.plugin.redis.RedisQueryRunner.createRedisQueryRunner;
 import static org.assertj.core.api.Assertions.assertThat;

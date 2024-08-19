@@ -114,7 +114,7 @@ public class UiQueryResource
         Optional<QueryInfo> queryInfo = dispatchManager.getFullQueryInfo(queryId);
         if (queryInfo.isPresent()) {
             try {
-                checkCanViewQueryOwnedBy(sessionContextFactory.extractAuthorizedIdentity(servletRequest, httpHeaders, alternateHeaderName), queryInfo.get().getSession().toIdentity(), accessControl);
+                checkCanViewQueryOwnedBy(sessionContextFactory.extractAuthorizedIdentity(servletRequest, httpHeaders), queryInfo.get().getSession().toIdentity(), accessControl);
                 return Response.ok(queryInfo.get()).build();
             }
             catch (AccessDeniedException e) {
