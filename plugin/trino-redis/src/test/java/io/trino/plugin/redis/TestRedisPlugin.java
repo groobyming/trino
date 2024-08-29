@@ -39,6 +39,10 @@ public class TestRedisPlugin
                         .put("redis.table-names", "test")
                         .put("redis.nodes", "localhost:6379")
                         .put("bootstrap.quiet", "true")
+                        .put("redis.use-config-db", "true")
+                        .put("redis.config-db-url", "jdbc:mysql://test")
+                        .put("redis.config-db-user", "test")
+                        .put("redis.config-db-password", "123456")
                         .buildOrThrow(),
                 new TestingConnectorContext());
         assertThat(connector).isNotNull();

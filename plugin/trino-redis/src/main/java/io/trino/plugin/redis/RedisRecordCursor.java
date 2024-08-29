@@ -150,7 +150,7 @@ public class RedisRecordCursor
     {
         // When the row of data is processed, it needs to be removed from the queue
         currentRowGroup.poll();
-        while (currentRowGroup.isEmpty()) {
+        if (currentRowGroup.isEmpty()) {
             while (keys.isEmpty()) {
                 if (!split.getConstraint().isAll()) {
                     return false;

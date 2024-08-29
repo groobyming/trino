@@ -31,7 +31,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 import static com.google.common.math.DoubleMath.roundToLong;
-import static io.trino.server.security.ResourceSecurity.AccessType.WEB_UI;
+import static io.trino.server.security.ResourceSecurity.AccessType.PUBLIC;
 import static java.math.RoundingMode.HALF_UP;
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -53,7 +53,7 @@ public class ClusterStatsResource
         this.clusterMemoryManager = requireNonNull(clusterMemoryManager, "clusterMemoryManager is null");
     }
 
-    @ResourceSecurity(WEB_UI)
+    @ResourceSecurity(PUBLIC)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ClusterStats getClusterStats()

@@ -20,7 +20,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-import static io.trino.server.security.ResourceSecurity.AccessType.INTERNAL_ONLY;
+import static io.trino.server.security.ResourceSecurity.AccessType.PUBLIC;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,7 +37,7 @@ public class MemoryResource
         this.memoryManager = requireNonNull(memoryManager, "memoryManager is null");
     }
 
-    @ResourceSecurity(INTERNAL_ONLY)
+    @ResourceSecurity(PUBLIC)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public MemoryInfo getMemoryInfo()
