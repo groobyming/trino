@@ -187,7 +187,20 @@ public class IgniteClient
     @Override
     public Collection<String> listSchemas(Connection connection)
     {
-        return ImmutableSet.of(IGNITE_SCHEMA);
+        try (ResultSet resultSet = connection.getMetaData().getSchemas()) {
+            ImmutableSet.Builder<String> schemaNames = ImmutableSet.builder();
+            while (resultSet.next()) {
+                String schemaName = resultSet.getString("TABLE_SCHEM");
+                // skip internal schemas
+                if (filterSchema(schemaName)) {
+                    schemaNames.add(schemaName);
+                }
+            }
+            return schemaNames.build();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
