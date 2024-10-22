@@ -102,7 +102,7 @@ import static java.util.stream.Collectors.joining;
 public abstract class BaseJdbcClient
         implements JdbcClient
 {
-    public static final Logger log = Logger.get(BaseJdbcClient.class);
+    private static final Logger log = Logger.get(BaseJdbcClient.class);
 
     static final Type TRINO_PAGE_SINK_ID_COLUMN_TYPE = BigintType.BIGINT;
 

@@ -31,7 +31,6 @@ import io.airlift.slice.Slice;
 import io.trino.Session;
 import io.trino.SystemSessionProperties;
 import io.trino.connector.system.GlobalSystemConnector;
-import io.trino.exchange.ExchangeManagerRegistry;
 import io.trino.execution.Column;
 import io.trino.execution.warnings.WarningCollector;
 import io.trino.metadata.AnalyzePropertyManager;

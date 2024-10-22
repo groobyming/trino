@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
+import io.airlift.log.Logger;
 import io.trino.plugin.base.aggregation.AggregateFunctionRewriter;
 import io.trino.plugin.base.aggregation.AggregateFunctionRule;
 import io.trino.plugin.base.expression.ConnectorExpressionRewriter;
@@ -141,6 +142,7 @@ import static java.util.stream.Collectors.joining;
 public class IgniteClient
         extends BaseJdbcClient
 {
+    private static final Logger LOG = Logger.get(IgniteClient.class);
     private static final String IGNITE_SCHEMA = "PUBLIC";
     private static final String IGNITE_DUMMY_ID = "dummy_id";
     private static final Splitter SPLITTER = Splitter.on("\"").omitEmptyStrings().trimResults();
@@ -206,7 +208,7 @@ public class IgniteClient
     public ResultSet getTables(Connection connection, Optional<String> schemaName, Optional<String> tableName)
             throws SQLException
     {
-        log.info("调用了 getTables 方法，参数 schemaName->%, tableName->%s", schemaName.get(), tableName.get());
+        LOG.info("调用了 getTables 方法，参数 schemaName->%s, tableName->%s", schemaName.get(), tableName.get());
         DatabaseMetaData metadata = connection.getMetaData();
         return metadata.getTables(
                 null, // no catalogs in Ignite
@@ -527,7 +529,7 @@ public class IgniteClient
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, schemaName);
             preparedStatement.setString(2, tableName);
-            log.info("#### current schemaName->%s, tableName->%s", schemaName, tableName);
+            LOG.info("#### current schemaName->%s, tableName->%s", schemaName, tableName);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (!resultSet.next()) {
                     return ImmutableMap.of();
