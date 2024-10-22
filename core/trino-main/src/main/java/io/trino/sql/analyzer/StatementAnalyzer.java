@@ -26,10 +26,12 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.common.math.IntMath;
+import io.airlift.log.Logger;
 import io.airlift.slice.Slice;
 import io.trino.Session;
 import io.trino.SystemSessionProperties;
 import io.trino.connector.system.GlobalSystemConnector;
+import io.trino.exchange.ExchangeManagerRegistry;
 import io.trino.execution.Column;
 import io.trino.execution.warnings.WarningCollector;
 import io.trino.metadata.AnalyzePropertyManager;
@@ -422,6 +424,7 @@ import static java.util.Objects.requireNonNull;
 
 class StatementAnalyzer
 {
+    private static final Logger log = Logger.get(StatementAnalyzer.class);
     private static final Set<String> WINDOW_VALUE_FUNCTIONS = ImmutableSet.of("lead", "lag", "first_value", "last_value", "nth_value");
 
     private final StatementAnalyzerFactory statementAnalyzerFactory;
@@ -2282,6 +2285,8 @@ class StatementAnalyzer
             analysis.addEmptyColumnReferencesForTable(accessControl, session.getIdentity(), targetTableName);
 
             if (tableHandle.isEmpty()) {
+                log.info("current tableHandle is empty Catalog->%s, Schema->%s, Table->%s",
+                        targetTableName.getCatalogName(), targetTableName.getSchemaName(), targetTableName);
                 getRequiredCatalogHandle(metadata, session, table, targetTableName.getCatalogName());
                 if (!metadata.schemaExists(session, new CatalogSchemaName(targetTableName.getCatalogName(), targetTableName.getSchemaName()))) {
                     throw semanticException(SCHEMA_NOT_FOUND, table, "Schema '%s' does not exist", targetTableName.getSchemaName());

@@ -142,7 +142,6 @@ public class IgniteClient
         extends BaseJdbcClient
 {
     private static final String IGNITE_SCHEMA = "PUBLIC";
-
     private static final String IGNITE_DUMMY_ID = "dummy_id";
     private static final Splitter SPLITTER = Splitter.on("\"").omitEmptyStrings().trimResults();
     private static final LocalDate MIN_DATE = LocalDate.parse("1970-01-01");
@@ -159,7 +158,7 @@ public class IgniteClient
             IdentifierMapping identifierMapping,
             RemoteQueryModifier queryModifier)
     {
-        super("`", connectionFactory, queryBuilder, config.getJdbcTypesMappedToVarchar(), identifierMapping, queryModifier, false);
+        super("\"", connectionFactory, queryBuilder, config.getJdbcTypesMappedToVarchar(), identifierMapping, queryModifier, false);
 
         JdbcTypeHandle bigintTypeHandle = new JdbcTypeHandle(Types.BIGINT, Optional.of("bigint"), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
         this.connectorExpressionRewriter = JdbcConnectorExpressionRewriterBuilder.newBuilder()
@@ -207,6 +206,7 @@ public class IgniteClient
     public ResultSet getTables(Connection connection, Optional<String> schemaName, Optional<String> tableName)
             throws SQLException
     {
+        log.info("调用了 getTables 方法，参数 schemaName->%, tableName->%s", schemaName.get(), tableName.get());
         DatabaseMetaData metadata = connection.getMetaData();
         return metadata.getTables(
                 null, // no catalogs in Ignite
@@ -527,7 +527,7 @@ public class IgniteClient
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, schemaName);
             preparedStatement.setString(2, tableName);
-
+            log.info("#### current schemaName->%s, tableName->%s", schemaName, tableName);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (!resultSet.next()) {
                     return ImmutableMap.of();
