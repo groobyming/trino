@@ -71,7 +71,6 @@ import io.trino.spi.type.VarcharType;
 import jakarta.annotation.Nullable;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
