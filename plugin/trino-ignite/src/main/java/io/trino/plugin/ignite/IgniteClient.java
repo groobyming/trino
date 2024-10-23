@@ -204,11 +204,11 @@ public class IgniteClient
         }
     }
 
-    @Override
+    /*@Override
     public ResultSet getTables(Connection connection, Optional<String> schemaName, Optional<String> tableName)
             throws SQLException
     {
-        LOG.info("调用了 getTables 方法，参数 schemaName->%s, tableName->%s", schemaName.get(), tableName.get());
+        LOG.info("调用了 getTables 方法，参数 schemaName->%s", schemaName.get());
         DatabaseMetaData metadata = connection.getMetaData();
         return metadata.getTables(
                 null, // no catalogs in Ignite
@@ -216,7 +216,7 @@ public class IgniteClient
                 escapeObjectNameForMetadataQuery(schemaName, metadata.getSearchStringEscape()).orElse(IGNITE_SCHEMA),
                 escapeObjectNameForMetadataQuery(tableName, metadata.getSearchStringEscape()).orElse(null),
                 new String[] {"TABLE", "VIEW"});
-    }
+    }*/
 
     @Override
     public Optional<ColumnMapping> toColumnMapping(ConnectorSession session, Connection connection, JdbcTypeHandle typeHandle)
