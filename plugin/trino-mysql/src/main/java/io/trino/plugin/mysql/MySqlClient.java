@@ -1067,6 +1067,7 @@ public class MySqlClient
             StatisticsDao statisticsDao = new StatisticsDao(handle);
 
             Long rowCount = statisticsDao.getRowCount(table);
+            log.info("xxx get table statistics:{}", rowCount);
             log.debug("Estimated row count of table %s is %s", table, rowCount);
 
             if (rowCount == null) {
