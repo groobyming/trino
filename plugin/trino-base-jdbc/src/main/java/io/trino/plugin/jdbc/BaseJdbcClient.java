@@ -213,6 +213,9 @@ public abstract class BaseJdbcClient
             RemoteIdentifiers remoteIdentifiers = getRemoteIdentifiers(connection);
             String remoteSchema = identifierMapping.toRemoteSchemaName(remoteIdentifiers, identity, schemaTableName.getSchemaName());
             String remoteTable = identifierMapping.toRemoteTableName(remoteIdentifiers, identity, remoteSchema, schemaTableName.getTableName());
+            log.info("xxx4 identifierMapping:%s", identifierMapping);
+            log.info("xxx4 remoteSchema:%s", remoteSchema);
+            log.info("xxx4 remoteTable:%s", remoteTable);
             try (ResultSet resultSet = getTables(connection, Optional.of(remoteSchema), Optional.of(remoteTable))) {
                 List<JdbcTableHandle> tableHandles = new ArrayList<>();
                 while (resultSet.next()) {
